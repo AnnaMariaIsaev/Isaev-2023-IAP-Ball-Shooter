@@ -16,8 +16,8 @@ public class Constants {
     }
 
     public static final class BallHandlerPorts {
-        public static final int beamBreakPort = 1;
-        public static final int beamBreakPort2 = 2;
+        public static final int beamBreakPort = 0;
+        public static final int beamBreakPort2 = 9;
         public static final int leftFlywheelPort = 16;
         public static final int rightFlywheelPort = 17;
         public static final int pivotPort = 14;

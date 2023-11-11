@@ -14,6 +14,7 @@ public class BeamBreak extends SubsystemBase {
   /** Creates a new beamBreak. */
 
   Timer timer = new Timer();
+  double seconds;
   DigitalInput beamBreak = new DigitalInput(Constants.BallHandlerPorts.beamBreakPort);
   DigitalInput beamBreak2 = new DigitalInput(Constants.BallHandlerPorts.beamBreakPort2);
 
@@ -21,10 +22,10 @@ public class BeamBreak extends SubsystemBase {
   }
 
   public boolean getSensor(){
-    return beamBreak.get();
+    return !beamBreak.get();
   }
   public boolean getSecondSensor(){
-    return beamBreak2.get();
+    return !beamBreak2.get();
   }
 
   @Override
@@ -33,12 +34,19 @@ public class BeamBreak extends SubsystemBase {
     if(getSensor()){
       timer.start();
     }
+
     if(getSecondSensor()){
+      if(timer.get() > 0){
+        seconds = timer.get();
+      }
       timer.stop();
+      timer.reset();
     }
 
-    SmartDashboard.putNumber("timer", timer.get());
     SmartDashboard.putBoolean("beamBreak1", getSensor());
     SmartDashboard.putBoolean("beamBreak2", getSecondSensor());
+    SmartDashboard.putNumber("seconds", seconds);
+    SmartDashboard.putNumber("timer", timer.get());
+
   }
 }
