@@ -17,27 +17,45 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class BallShooter extends CommandBase {
   /** Creates a new spinWheel. */
+
+  public double ticks2RPM = 4096/10/60;
   private static final double kP = 0;
   private static final double kI = 0;
   private static final double kD = 0;
 
   private PIDController pid = new PIDController(0, 0, 0);
 
-  private WPI_TalonSRX flyWheel = new WPI_TalonSRX();
+  private WPI_TalonSRX flyWheel = new WPI_TalonSRX(0);
+  private WPI_TalonSRX feedWheel = new WPI_TalonSRX(1);
+
   public BallShooter() {
     // Use addRequirements() here to declare subsystem dependencies.
+    flyWheel.configFactoryDefault();
+    feedWheel.configFactoryDefault();
+
+    flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
+  }
+
+  public double getRPM(){
+    return flyWheel.getSelectedSensorVelocity()/ticks2RPM;
+  }
+
+  public void setSpeed(){
+    flyWheel.set(controlMode.);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    
   }
 
   // Called once the command ends or is interrupted.
