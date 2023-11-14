@@ -41,8 +41,10 @@ public class BallShooter extends CommandBase {
     return flyWheel.getSelectedSensorVelocity()/ticks2RPM;
   }
 
-  public void setSpeed(){
-    flyWheel.set(controlMode.);
+  
+  //im not sure if this will work but i think it might if you call setspeed later
+  public void setSpeed(double setPoint){
+    flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), setPoint));
   }
 
   // Called when the command is initially scheduled.
