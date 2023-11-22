@@ -5,7 +5,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.FeedForwardConst;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -24,16 +27,21 @@ public class BallShooter extends CommandBase {
   private static final double kD = 0;
 
   private PIDController pid = new PIDController(0, 0, 0);
+  private SimpleMotorFeedforward feedF = new SimpleMotorFeedforward(FeedForwardConst.kS, FeedForwardConst.kV, FeedForwardConst.kA);
 
   private WPI_TalonSRX flyWheel = new WPI_TalonSRX(0);
   private WPI_TalonSRX feedWheel = new WPI_TalonSRX(1);
+
 
   public BallShooter() {
     // Use addRequirements() here to declare subsystem dependencies.
     flyWheel.configFactoryDefault();
     feedWheel.configFactoryDefault();
 
-    flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    resetEncoder();
+    // this is in meters per second I think
+    pid.setTolerance(0.05);
 
   }
 
@@ -42,22 +50,27 @@ public class BallShooter extends CommandBase {
   }
 
   
-  //im not sure if this will work but i think it might if you call setspeed later
+  //combine PID with feedforward
+  //what unit is the setpoint?
   public void setSpeed(double setPoint){
-    flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), setPoint));
+    flyWheel.setVoltage(pid.calculate(getRPM(), setPoint) + feedF.calculate(setPoint));
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+  public void resetEncoder(){
+    flyWheel.setSelectedSensorPosition(0);
+  }
 
-
+  public boolean atSetpoint(){
+    return pid.atSetpoint();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    if(RobotContainer.getJoy().getRawButtonPressed(0)){
+      //change button and setpoint
+      setSpeed(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
