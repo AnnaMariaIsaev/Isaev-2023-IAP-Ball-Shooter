@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.FeedForwardConst;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -70,7 +69,7 @@ public class BallShooter extends SubsystemBase {
       setSpeed(120);
     }
     if(RobotContainer.getJoy().getRawButtonPressed(5)){
-      setSpeed(240);
+      setSpeed(0);
     }
     if(RobotContainer.getJoy().getRawButtonPressed(4)){
       setSpeed(360);

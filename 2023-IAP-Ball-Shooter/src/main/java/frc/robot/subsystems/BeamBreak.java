@@ -15,8 +15,8 @@ public class BeamBreak extends SubsystemBase {
 
   Timer timer = new Timer();
   double seconds;
-  DigitalInput beamBreak = new DigitalInput(Constants.BallHandlerPorts.beamBreakPort);
-  DigitalInput beamBreak2 = new DigitalInput(Constants.BallHandlerPorts.beamBreakPort2);
+  DigitalInput beamBreak = new DigitalInput(Constants.BeamBreak.beamID1);
+  DigitalInput beamBreak2 = new DigitalInput(Constants.BeamBreak.beamID2);
 
   public BeamBreak() {
   }
