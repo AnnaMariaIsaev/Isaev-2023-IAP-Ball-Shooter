@@ -6,19 +6,22 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.FeedForwardConst;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class BallShooter extends CommandBase {
+
+public class BallShooter extends SubsystemBase {
   /** Creates a new spinWheel. */
 
   public double ticks2RPM = 4096/10/60;
@@ -26,20 +29,21 @@ public class BallShooter extends CommandBase {
   private static final double kI = 0;
   private static final double kD = 0;
 
-  private PIDController pid = new PIDController(0, 0, 0);
-  private SimpleMotorFeedforward feedF = new SimpleMotorFeedforward(FeedForwardConst.kS, FeedForwardConst.kV, FeedForwardConst.kA);
+  private PIDController pid = new PIDController(Constants.FlywheelPIDConsts.pidP, Constants.FlywheelPIDConsts.pidI, Constants.FlywheelPIDConsts.pidD);
+  private SimpleMotorFeedforward feedF = new SimpleMotorFeedforward(Constants.FeedForwardConst.kS, Constants.FeedForwardConst.kV, Constants.FeedForwardConst.kA);
 
   private WPI_TalonSRX flyWheel = new WPI_TalonSRX(0);
   private WPI_TalonSRX feedWheel = new WPI_TalonSRX(1);
 
 
   public BallShooter() {
-    // Use addRequirements() here to declare subsystem dependencies.
     flyWheel.configFactoryDefault();
     feedWheel.configFactoryDefault();
 
     flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+
     resetEncoder();
+    flyWheel.setNeutralMode(NeutralMode.Coast);
     // this is in meters per second I think
     pid.setTolerance(0.05);
 
@@ -48,7 +52,6 @@ public class BallShooter extends CommandBase {
   public double getRPM(){
     return flyWheel.getSelectedSensorVelocity()/ticks2RPM;
   }
-
   
   //combine PID with feedforward
   //what unit is the setpoint?
@@ -65,21 +68,17 @@ public class BallShooter extends CommandBase {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if(RobotContainer.getJoy().getRawButtonPressed(0)){
-      //change button and setpoint
+  public void periodic() {
+    if(RobotContainer.getJoy().getRawButtonPressed(6)){
+      setSpeed(0.1);
+    }
+    if(RobotContainer.getJoy().getRawButtonPressed(5)){
       setSpeed(0);
     }
-  }
+    if(RobotContainer.getJoy().getRawButtonPressed(4)){
+      setSpeed(1000);
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+    SmartDashboard.putNumber("RPM", getRPM());
   }
 }

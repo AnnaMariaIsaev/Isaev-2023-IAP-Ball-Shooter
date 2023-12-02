@@ -3,16 +3,16 @@ package frc.robot;
 public class Constants {
 
     //there will only be one set of PID constants in the final robot
-    public static final class leftFlywheelPIDConsts {
-        public static double pidP = 0.07;
+    public static final class FlywheelPIDConsts {
+        public static double pidP = 0.00002018;
         public static double pidI = 0;
         public static double pidD = 0;
     }
 
-    public static final class rightFlywheelPIDConsts {
-        public static double pidP = 0.07;
-        public static double pidI = 0;
-        public static double pidD = 0;
+    public static final class FeedForwardConst {
+        public static double kS = 0.74034;
+        public static double kV = 0.000030589;
+        public static double kA = 0.000003086;
     }
 
     public static final class BallHandlerPorts {
@@ -24,15 +24,9 @@ public class Constants {
         public static final int rollerPort = 15;
     }
 
-    public static final class pivotPIDConsts {
-        public static final double pidP = 0.05;
-        public static final double pidI = 0;
-        public static final double pidD = 0;
-    }
-
     public static final class BeamBreak {
         public static final int beamID1 = 0;
-        public static final int beamID2 = 0;
+        public static final int beamID2 = 9;
     }
 
 
