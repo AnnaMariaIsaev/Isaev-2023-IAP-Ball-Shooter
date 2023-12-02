@@ -49,6 +49,10 @@ public class BallShooter extends SubsystemBase {
   public double getRPM(){
     return flyWheel.getSelectedSensorVelocity()/ticks2RPM;
   }
+//maube delete this
+  public double getVelocity(){
+    return getRPM()*Constants.flyCircumference/100.0/60.0;
+  }
   
   //combine PID with feedforward
   public void setSpeed(double setPoint){
@@ -59,6 +63,10 @@ public class BallShooter extends SubsystemBase {
     flyWheel.setSelectedSensorPosition(0);
   }
 
+  public void setSetpoint(double setPoint){
+    pid.setSetpoint(setPoint);
+  }
+
   public boolean atSetpoint(){
     return pid.atSetpoint();
   }
@@ -66,13 +74,15 @@ public class BallShooter extends SubsystemBase {
   // Called every time the scheduler runs while the command is scheduled.
   public void periodic() {
     if(RobotContainer.getJoy().getRawButtonPressed(6)){
-      setSpeed(120);
+      setSetpoint(240);
+      setSpeed(240);
     }
     if(RobotContainer.getJoy().getRawButtonPressed(5)){
       setSpeed(0);
     }
     if(RobotContainer.getJoy().getRawButtonPressed(4)){
-      setSpeed(360);
+      setSetpoint(500);
+      setSpeed(500);
     }
 
     SmartDashboard.putNumber("RPM", getRPM());

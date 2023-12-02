@@ -16,6 +16,7 @@ public class RobotContainer {
 
   static Joystick joystick = new Joystick(Constants.joystick);
   BeamBreak beamBreaker = new BeamBreak();
+  BallShooter shooter = new BallShooter();
   private static final BallShooter ballShooter = new BallShooter();
 
   public RobotContainer() {

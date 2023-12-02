@@ -21,4 +21,7 @@ public class Constants {
         public static final int beamID2 = 9;
     }
 
+    public static final int joystick = 0;
+    public static final double flyCircumference = 31.42; //in cm
+
 }
