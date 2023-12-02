@@ -10,12 +10,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -30,6 +28,8 @@ public class BallShooter extends SubsystemBase {
 
   private WPI_TalonSRX flyWheel = new WPI_TalonSRX(4);
   private WPI_TalonSRX feedWheel = new WPI_TalonSRX(3);
+
+  private boolean onOrOff = false;
 
 
   public BallShooter() {
@@ -54,6 +54,9 @@ public class BallShooter extends SubsystemBase {
     return getRPM()*Constants.flyCircumference/100.0/60.0;
   }
   
+  public void setFeed(int speed){
+    feedWheel.set(speed);
+  }
   //combine PID with feedforward
   public void setSpeed(double setPoint){
     flyWheel.setVoltage(pid.calculate(getRPM(), setPoint) + feedF.calculate(setPoint));
@@ -73,6 +76,15 @@ public class BallShooter extends SubsystemBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   public void periodic() {
+    if(RobotContainer.getJoy().getRawButtonPressed(1)){
+      if(onOrOff = false){
+        setFeed(1);
+        onOrOff = true;
+      } else {
+        setFeed(0);
+        onOrOff = false;
+      }
+    }
     if(RobotContainer.getJoy().getRawButtonPressed(6)){
       setSetpoint(240);
       setSpeed(240);
