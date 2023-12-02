@@ -24,8 +24,6 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-  
-
   }
   
   public static Joystick getJoy(){

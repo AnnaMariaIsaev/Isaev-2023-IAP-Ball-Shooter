@@ -25,15 +25,12 @@ public class BallShooter extends SubsystemBase {
   /** Creates a new spinWheel. */
 
   public double ticks2RPM = 4096/10/60;
-  private static final double kP = 0;
-  private static final double kI = 0;
-  private static final double kD = 0;
 
   private PIDController pid = new PIDController(Constants.FlywheelPIDConsts.pidP, Constants.FlywheelPIDConsts.pidI, Constants.FlywheelPIDConsts.pidD);
   private SimpleMotorFeedforward feedF = new SimpleMotorFeedforward(Constants.FeedForwardConst.kS, Constants.FeedForwardConst.kV, Constants.FeedForwardConst.kA);
 
-  private WPI_TalonSRX flyWheel = new WPI_TalonSRX(0);
-  private WPI_TalonSRX feedWheel = new WPI_TalonSRX(1);
+  private WPI_TalonSRX flyWheel = new WPI_TalonSRX(4);
+  private WPI_TalonSRX feedWheel = new WPI_TalonSRX(3);
 
 
   public BallShooter() {
@@ -43,8 +40,9 @@ public class BallShooter extends SubsystemBase {
     flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
     resetEncoder();
+
     flyWheel.setNeutralMode(NeutralMode.Coast);
-    // this is in meters per second I think
+
     pid.setTolerance(0.05);
 
   }
@@ -54,7 +52,6 @@ public class BallShooter extends SubsystemBase {
   }
   
   //combine PID with feedforward
-  //what unit is the setpoint?
   public void setSpeed(double setPoint){
     flyWheel.setVoltage(pid.calculate(getRPM(), setPoint) + feedF.calculate(setPoint));
   }
@@ -70,13 +67,13 @@ public class BallShooter extends SubsystemBase {
   // Called every time the scheduler runs while the command is scheduled.
   public void periodic() {
     if(RobotContainer.getJoy().getRawButtonPressed(6)){
-      setSpeed(0.1);
+      setSpeed(120);
     }
     if(RobotContainer.getJoy().getRawButtonPressed(5)){
-      setSpeed(0);
+      setSpeed(240);
     }
     if(RobotContainer.getJoy().getRawButtonPressed(4)){
-      setSpeed(1000);
+      setSpeed(360);
     }
 
     SmartDashboard.putNumber("RPM", getRPM());
