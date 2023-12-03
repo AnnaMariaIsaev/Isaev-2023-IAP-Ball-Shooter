@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -21,7 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class BallShooter extends SubsystemBase {
   /** Creates a new spinWheel. */
 
-  public double ticks2RPM = 4096/10/60;
+  public double ticks2RPS = 4096/10;
+  private double setPoint;
 
   private PIDController pid = new PIDController(Constants.FlywheelPIDConsts.pidP, Constants.FlywheelPIDConsts.pidI, Constants.FlywheelPIDConsts.pidD);
   private SimpleMotorFeedforward feedF = new SimpleMotorFeedforward(Constants.FeedForwardConst.kS, Constants.FeedForwardConst.kV, Constants.FeedForwardConst.kA);
@@ -46,20 +48,24 @@ public class BallShooter extends SubsystemBase {
 
   }
 
-  public double getRPM(){
-    return flyWheel.getSelectedSensorVelocity()/ticks2RPM;
+  public double getRPS(){
+    return flyWheel.getSelectedSensorVelocity()/ticks2RPS*-1;
   }
 //maube delete this
   public double getVelocity(){
-    return getRPM()*Constants.flyCircumference/100.0/60.0;
+    return getRPS()*Constants.flyCircumference/100.0;
   }
   
-  public void setFeed(int speed){
-    feedWheel.set(speed);
+  public void setFeed(double speed){
+    feedWheel.set(ControlMode.PercentOutput, speed);
   }
   //combine PID with feedforward
   public void setSpeed(double setPoint){
-    flyWheel.setVoltage(pid.calculate(getRPM(), setPoint) + feedF.calculate(setPoint));
+    if(setPoint == 0){
+      flyWheel.set(ControlMode.PercentOutput, 0);
+    } else{
+      flyWheel.setVoltage(pid.calculate(getRPS(), setPoint) + feedF.calculate(setPoint));
+    }
   }
 
   public void resetEncoder(){
@@ -77,26 +83,36 @@ public class BallShooter extends SubsystemBase {
   // Called every time the scheduler runs while the command is scheduled.
   public void periodic() {
     if(RobotContainer.getJoy().getRawButtonPressed(1)){
-      if(onOrOff = false){
-        setFeed(1);
-        onOrOff = true;
+      onOrOff = !onOrOff;
+      if(onOrOff){
+        setFeed(0.9);
       } else {
         setFeed(0);
-        onOrOff = false;
       }
     }
-    if(RobotContainer.getJoy().getRawButtonPressed(6)){
-      setSetpoint(240);
-      setSpeed(240);
+    if(RobotContainer.getJoy().getRawButtonPressed(3)){
+      setSetpoint(97);
+      setSpeed(97);
+      setPoint = 97;
     }
     if(RobotContainer.getJoy().getRawButtonPressed(5)){
-      setSpeed(0);
+      setSpeed(85);
+      setPoint = 85;
     }
     if(RobotContainer.getJoy().getRawButtonPressed(4)){
-      setSetpoint(500);
-      setSpeed(500);
+      setSetpoint(90);
+      setSpeed(90);
+      setPoint = 90;
+    }
+    if(RobotContainer.getJoy().getRawButtonPressed(2)){
+      setSetpoint(0);
+      setSpeed(0);
+      setPoint = 0;
     }
 
-    SmartDashboard.putNumber("RPM", getRPM());
-  }
+    SmartDashboard.putNumber("RPS", getRPS());
+    SmartDashboard.putBoolean("setpoint", pid.atSetpoint());
+    SmartDashboard.putNumber("bang", pid.calculate(getRPS(), setPoint));
+    SmartDashboard.putNumber("Feed Forward", 0.9 * feedF.calculate(setPoint)/12.0);
+    }
 }
