@@ -91,25 +91,20 @@ public class BallShooter extends SubsystemBase {
       }
     }
     if(RobotContainer.getJoy().getRawButtonPressed(3)){
-      setSetpoint(97);
-      setSpeed(97);
       setPoint = 97;
     }
     if(RobotContainer.getJoy().getRawButtonPressed(5)){
-      setSpeed(85);
       setPoint = 85;
     }
     if(RobotContainer.getJoy().getRawButtonPressed(4)){
-      setSetpoint(90);
-      setSpeed(90);
       setPoint = 90;
     }
     if(RobotContainer.getJoy().getRawButtonPressed(2)){
-      setSetpoint(0);
-      setSpeed(0);
       setPoint = 0;
     }
 
+    setSetpoint(setPoint);
+    setSpeed(setPoint);
     SmartDashboard.putNumber("RPS", getRPS());
     SmartDashboard.putBoolean("setpoint", pid.atSetpoint());
     SmartDashboard.putNumber("bang", pid.calculate(getRPS(), setPoint));
