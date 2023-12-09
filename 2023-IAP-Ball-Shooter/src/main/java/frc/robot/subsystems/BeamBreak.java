@@ -16,6 +16,7 @@ public class BeamBreak extends SubsystemBase {
   boolean timerStarted = false; 
   Timer timer = new Timer();
   double seconds;
+  double distance = 18.0;
   DigitalInput beamBreak = new DigitalInput(Constants.BeamBreak.beamID1);
   // DigitalInput beamBreak2 = new DigitalInput(Constants.BeamBreak.beamID2);
 
@@ -41,6 +42,7 @@ public class BeamBreak extends SubsystemBase {
     if(!getSensor() && timerStarted){
       timer.stop();
       timerStarted = false;
+      seconds = timer.get();
     }
 
     // if(getSecondSensor()){
@@ -54,6 +56,6 @@ public class BeamBreak extends SubsystemBase {
     // SmartDashboard.putBoolean("beamBreak2", getSecondSensor());
     SmartDashboard.putNumber("seconds", seconds);
     SmartDashboard.putNumber("timer", timer.get());
-
+    SmartDashboard.putNumber("velocity", distance/seconds);
   }
 }

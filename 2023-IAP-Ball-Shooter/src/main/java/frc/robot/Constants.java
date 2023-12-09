@@ -18,7 +18,7 @@ public class Constants {
 
     public static final class BeamBreak {
         public static final int beamID1 = 1;
-        public static final int beamID2 = 9;
+        // public static final int beamID2 = 9;
     }
 
     public static final int joystick = 0;
