@@ -105,6 +105,7 @@ public class BallShooter extends SubsystemBase {
 
     setSetpoint(setPoint);
     setSpeed(setPoint);
+    
     SmartDashboard.putNumber("RPS", getRPS());
     SmartDashboard.putBoolean("setpoint", pid.atSetpoint());
     SmartDashboard.putNumber("bang", pid.calculate(getRPS(), setPoint));
