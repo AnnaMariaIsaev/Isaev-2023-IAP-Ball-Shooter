@@ -13,10 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class BeamBreak extends SubsystemBase {
   /** Creates a new beamBreak. */
 
+  boolean timerStarted = false; 
   Timer timer = new Timer();
   double seconds;
   DigitalInput beamBreak = new DigitalInput(Constants.BeamBreak.beamID1);
-  DigitalInput beamBreak2 = new DigitalInput(Constants.BeamBreak.beamID2);
+  // DigitalInput beamBreak2 = new DigitalInput(Constants.BeamBreak.beamID2);
 
   public BeamBreak() {
   }
@@ -24,27 +25,33 @@ public class BeamBreak extends SubsystemBase {
   public boolean getSensor(){
     return !beamBreak.get();
   }
-  public boolean getSecondSensor(){
-    return !beamBreak2.get();
-  }
+  // public boolean getSecondSensor(){
+  //   return !beamBreak2.get();
+  // }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(getSensor()){
+    if(getSensor() && !timerStarted){
+      timer.reset();
       timer.start();
+      timerStarted = true;
+    }
+    
+    if(!getSensor() && timerStarted){
+      timer.stop();
+      timerStarted = false;
     }
 
-    if(getSecondSensor()){
-      if(timer.get() > 0){
-        seconds = timer.get();
-      }
-      timer.stop();
-      timer.reset();
-    }
+    // if(getSecondSensor()){
+    //   if(timer.get() > 0){
+    //     seconds = timer.get();
+    //   }
+      // timer.stop();
+      // timer.reset();
 
     SmartDashboard.putBoolean("beamBreak1", getSensor());
-    SmartDashboard.putBoolean("beamBreak2", getSecondSensor());
+    // SmartDashboard.putBoolean("beamBreak2", getSecondSensor());
     SmartDashboard.putNumber("seconds", seconds);
     SmartDashboard.putNumber("timer", timer.get());
 
