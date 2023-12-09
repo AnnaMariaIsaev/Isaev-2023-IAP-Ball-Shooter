@@ -56,6 +56,6 @@ public class BeamBreak extends SubsystemBase {
     // SmartDashboard.putBoolean("beamBreak2", getSecondSensor());
     SmartDashboard.putNumber("seconds", seconds);
     SmartDashboard.putNumber("timer", timer.get());
-    SmartDashboard.putNumber("velocity", distance/seconds);
+    SmartDashboard.putNumber("velocity", distance/seconds/100.0);
   }
 }
