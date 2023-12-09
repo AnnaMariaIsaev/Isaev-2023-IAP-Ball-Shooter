@@ -97,8 +97,15 @@ public class BallShooter extends SubsystemBase {
     if(RobotContainer.getJoy().getRawButtonPressed(4)){
       setPoint = 90;
     }
+    //stop flywheel
     if(RobotContainer.getJoy().getRawButtonPressed(2)){
       setPoint = 0;
+    }
+    if(RobotContainer.getJoy().getRawButtonPressed(8)){
+      setPoint = 50;
+    }
+    if(RobotContainer.getJoy().getRawButtonPressed(10)){
+      setPoint = 10;
     }
 
     setSetpoint(setPoint);
