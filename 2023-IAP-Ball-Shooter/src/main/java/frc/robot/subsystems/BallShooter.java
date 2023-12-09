@@ -17,8 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
-
 public class BallShooter extends SubsystemBase {
   /** Creates a new spinWheel. */
 
@@ -105,7 +103,7 @@ public class BallShooter extends SubsystemBase {
 
     setSetpoint(setPoint);
     setSpeed(setPoint);
-    
+
     SmartDashboard.putNumber("RPS", getRPS());
     SmartDashboard.putBoolean("setpoint", pid.atSetpoint());
     SmartDashboard.putNumber("bang", pid.calculate(getRPS(), setPoint));
